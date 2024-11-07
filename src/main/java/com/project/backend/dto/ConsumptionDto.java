@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 
 public class ConsumptionDto {
 
@@ -24,7 +26,7 @@ public class ConsumptionDto {
         private String category;
 
         private Integer spendingAmount;
-        private String date;
+        private Date date;
 
         @Builder
         public ConsumptionRequestDto(Integer memberId, String consumptionDetails, String category, Integer spendingAmount, String date) {
@@ -57,7 +59,7 @@ public class ConsumptionDto {
         private String consumptionDetails;
         private String category;
         private Integer spendingAmount;
-        private String date;
+        private Date date;
 
     public ConsumptionResponseDto(Consumption consumption) {
             this.consumptionId = consumption.getConsumptionId();
