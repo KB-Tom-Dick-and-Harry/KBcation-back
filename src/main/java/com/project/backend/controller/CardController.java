@@ -31,4 +31,6 @@ public class CardController {
     @Operation(summary = "카드 조회")
     @GetMapping("/{cardId}")
     public ResponseEntity<CardDto.CardResponseDto> getCard(@PathVariable Long cardId) {
-        return ResponseEntity
+        return ResponseEntity.ok(cardService.getCard(cardId));
+    }
+}
