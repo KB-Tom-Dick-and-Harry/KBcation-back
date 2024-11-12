@@ -1,4 +1,4 @@
-package com.project.backend.service.impl;
+package com.project.backend.service;
 
 import com.project.backend.dto.MemberDto;
 import com.project.backend.model.Member;

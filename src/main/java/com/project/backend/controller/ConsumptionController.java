@@ -2,6 +2,7 @@ package com.project.backend.controller;
 
 
 import com.project.backend.dto.ConsumptionDto;
+import com.project.backend.service.ConsumptionServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,20 +18,20 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ConsumptionController {
 
-    private final ConsumptionService consumptionService;
+    private final ConsumptionServiceImpl consumptionServiceImpl;
 
     @Operation(summary = "소비 내역 생성", description = "새로운 소비 내역을 생성합니다.")
     @PostMapping
     public ResponseEntity<Integer> createConsumption(
             @RequestBody ConsumptionDto.ConsumptionRequestDto requestDto) {
-        Integer consumptionId = consumptionService.createConsumption(requestDto);
+        Integer consumptionId = consumptionServiceImpl.createConsumption(requestDto);
         return ResponseEntity.ok(consumptionId);
     }
 
     @Operation(summary = "전체 소비 내역 조회", description = "모든 소비 내역을 조회합니다.")
     @GetMapping
     public ResponseEntity<List<ConsumptionDto.ConsumptionResponseDto>> getAllConsumption() {
-        List<ConsumptionDto.ConsumptionResponseDto> consumptions = consumptionService.getAllConsumptions();
+        List<ConsumptionDto.ConsumptionResponseDto> consumptions = consumptionServiceImpl.getAllConsumption();
         return ResponseEntity.ok(consumptions);
     }
 
@@ -38,7 +39,7 @@ public class ConsumptionController {
     @GetMapping("/{consumptionId}")
     public ResponseEntity<ConsumptionDto.ConsumptionResponseDto> getConsumptionById(
             @Parameter(description = "소비 내역 ID") @PathVariable Integer consumptionId) {
-        ConsumptionDto.ConsumptionResponseDto consumption = consumptionService.getConsumption(consumptionId);
+        ConsumptionDto.ConsumptionResponseDto consumption = consumptionServiceImpl.getConsumption(consumptionId);
         return ResponseEntity.ok(consumption);
     }
 
@@ -46,7 +47,7 @@ public class ConsumptionController {
     @GetMapping("/member/{memberId}")
     public ResponseEntity<List<ConsumptionDto.ConsumptionResponseDto>> getConsumptionsByMemberId(
             @Parameter(description = "회원 ID") @PathVariable Integer memberId) {
-        List<ConsumptionDto.ConsumptionResponseDto> consumptions = consumptionService.getConsumptionsByMemberId(memberId);
+        List<ConsumptionDto.ConsumptionResponseDto> consumptions = consumptionServiceImpl.getConsumptionsByMemberId(memberId);
         return ResponseEntity.ok(consumptions);
     }
 
@@ -55,7 +56,7 @@ public class ConsumptionController {
     public ResponseEntity<Void> updateConsumptionDetails(
             @Parameter(description = "소비 내역 ID") @PathVariable Integer consumptionId,
             @RequestBody ConsumptionDto.ConsumptionRequestDto requestDto) {
-        consumptionService.updateConsumption(consumptionId, requestDto);
+        consumptionServiceImpl.updateConsumption(consumptionId, requestDto);
         return ResponseEntity.ok().build();
     }
 
@@ -63,7 +64,7 @@ public class ConsumptionController {
     @DeleteMapping("/{consumptionId}")
     public ResponseEntity<Void> deleteConsumption(
             @Parameter(description = "소비 내역 ID") @PathVariable Integer consumptionId) {
-        consumptionService.deleteConsumption(consumptionId);
+        consumptionServiceImpl.deleteConsumption(consumptionId);
         return ResponseEntity.ok().build();
     }
 

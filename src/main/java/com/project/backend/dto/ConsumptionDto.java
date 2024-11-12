@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
@@ -34,7 +36,13 @@ public class ConsumptionDto {
             this.consumptionDetails = consumptionDetails;
             this.category = category;
             this.spendingAmount = spendingAmount;
-            this.date = date;
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                this.date = dateFormat.parse(date);
+            } catch (ParseException e) {
+                e.printStackTrace(); // 로그를 출력하거나 적절한 예외 처리를 한다.
+                this.date = null; // 기본값 설정 또는 예외 처리에 따른 조치
+            }
         }
 
 

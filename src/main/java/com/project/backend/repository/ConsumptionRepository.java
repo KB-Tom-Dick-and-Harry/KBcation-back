@@ -10,7 +10,7 @@ import java.util.List;
 public interface ConsumptionRepository extends JpaRepository<Consumption, Integer> {
 
     //특정 회원의 소비 내역 조회
-    List<Consumption> findByUserId(Integer memberId);
+    List<Consumption> findByMemberId(Integer memberId);
 
     //특정 카테고리의 소비 내역 조회
     List<Consumption> findByCategory(String category);

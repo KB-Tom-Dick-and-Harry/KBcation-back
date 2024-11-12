@@ -32,7 +32,7 @@ public class ConsumptionServiceImpl implements ConsumptionService {
     @Override
     public void updateConsumption(Integer consumptionId, ConsumptionDto.ConsumptionRequestDto requestDto) {
         Consumption consumption = consumptionRepository.findById(consumptionId)
-                .orElseThrow() -> new IllegalArgumentException("소비 내역을 찾을 수 없습니다.");
+                .orElseThrow(() -> new IllegalArgumentException("소비 내역을 찾을 수 없습니다."));
         consumption.updateDetails(requestDto);
         consumptionRepository.save(consumption);
     }
@@ -43,5 +43,19 @@ public class ConsumptionServiceImpl implements ConsumptionService {
             throw new IllegalArgumentException("소비 내역을 찾을 수 없습니다.");
         }
         consumptionRepository.deleteById(consumptionId);
+    }
+
+    @Override
+    public ConsumptionDto.ConsumptionResponseDto getConsumption(Integer consumptionId) {
+        Consumption consumption = consumptionRepository.findById(consumptionId)
+                .orElseThrow(() -> new IllegalArgumentException("소비 내역을 찾을 수 없습니다."));
+        return new ConsumptionDto.ConsumptionResponseDto(consumption);
+    }
+
+    @Override
+    public List<ConsumptionDto.ConsumptionResponseDto> getConsumptionsByMemberId(Integer memberId) {
+        return consumptionRepository.findByMemberId(memberId).stream()
+                .map(ConsumptionDto.ConsumptionResponseDto::new)
+                .collect(Collectors.toList());
     }
 }
