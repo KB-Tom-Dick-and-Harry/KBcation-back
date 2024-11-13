@@ -33,6 +33,7 @@ public class GameDto {
         private String correctAnswer;
         private String yourAnswer;
         private String  answerExplanation;
+        private boolean isCorrect;
 
         public GameResponseDto(Game game) {
             this.gameId = game.getGameId();

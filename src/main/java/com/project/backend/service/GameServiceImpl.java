@@ -47,10 +47,9 @@ public class GameServiceImpl implements GameService {
         Game game = gameRepository.findById(gameId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게임입니다."));
 
-        // 사용자가 선택한 답변 저장
+        // 사용자가 선택한 답변 저장 및 정답 여부 업데이트
         game.setYourAnswer(yourAnswer);
 
-        // 게임 상태를 업데이트한 후 응답 반환
         return new GameDto.GameResponseDto(game);
     }
 
@@ -61,7 +60,7 @@ public class GameServiceImpl implements GameService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게임입니다."));
 
         // 정답 여부 확인
-        if (!previousGame.getYourAnswer().equals(previousGame.getCorrectAnswer())) {
+        if (!previousGame.isCorrect()) {
             throw new IllegalStateException("정답이 맞지 않아 다음 단계로 진행할 수 없습니다.");
         }
 
