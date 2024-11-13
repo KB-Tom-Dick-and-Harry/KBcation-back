@@ -33,4 +33,11 @@ public class CardController {
     public ResponseEntity<CardDto.CardResponseDto> getCard(@PathVariable Long cardId) {
         return ResponseEntity.ok(cardService.getCard(cardId));
     }
+
+    // 새로운 추천 엔드포인트 추가
+    @Operation(summary = "카드 추천")
+    @GetMapping("/recommendations")
+    public ResponseEntity<List<CardDto.CardResponseDto>> getRecommendedCards() {
+        return ResponseEntity.ok(cardService.getRecommendedCards());
+    }
 }

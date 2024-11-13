@@ -38,5 +38,17 @@ public class CardDto {
             this.cardName = card.getCardName();
             this.description = card.getDescription();
         }
+
+        // 새로운 생성자 추가
+        public CardResponseDto(Long cardId, String cardName, String description) {
+            this.cardId = cardId;
+            this.cardName = cardName;
+            this.description = description;
+        }
+
+        // 정적 팩토리 메서드 추가 (선택적)
+        public static CardResponseDto of(Long cardId, String cardName, String description) {
+            return new CardResponseDto(cardId, cardName, description);
+        }
     }
 }
