@@ -5,5 +5,5 @@ import com.project.backend.dto.GameDto;
 public interface GameService {
     GameDto.GameResponseDto startNewGame(Long memberId);
     GameDto.GameResponseDto submitAnswer(Long gameId, String yourAnswer);
-    Long createNextGame(Long previousGameId);
+    GameDto.GameResponseDto createNextGame(Long previousGameId);
 }

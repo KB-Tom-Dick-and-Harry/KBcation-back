@@ -36,8 +36,8 @@ public class GameController {
 
     @Operation(summary = "다음 단계로 진행", description = "정답을 맞춘 경우 다음 단계로 진행합니다.")
     @PostMapping("/{gameId}/next")
-    public ResponseEntity<Long> nextGame(@PathVariable Long gameId) {
-        Long nextGameId = gameService.createNextGame(gameId);
-        return ResponseEntity.ok(nextGameId);
+    public ResponseEntity<GameDto.GameResponseDto> nextGame(@PathVariable Long gameId) {
+        GameDto.GameResponseDto nextGameResponse = gameService.createNextGame(gameId);
+        return ResponseEntity.ok(nextGameResponse);
     }
 }
