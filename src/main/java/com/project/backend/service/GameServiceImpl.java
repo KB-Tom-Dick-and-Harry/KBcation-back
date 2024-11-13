@@ -32,6 +32,7 @@ public class GameServiceImpl implements GameService {
                 .quiz(generateQuizForRound())
                 .answerOptions(generateAnswerOptions())
                 .correctAnswer(generateCorrectAnswer())
+                .answerExplanation(generateAnswerExplanation())
                 .build();
 
         gameRepository.save(game);
@@ -55,7 +56,7 @@ public class GameServiceImpl implements GameService {
 
     @Override
     @Transactional
-    public Long createNextGame(Long previousGameId) {
+    public GameDto.GameResponseDto createNextGame(Long previousGameId) {
         Game previousGame = gameRepository.findById(previousGameId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게임입니다."));
 
@@ -77,23 +78,31 @@ public class GameServiceImpl implements GameService {
                 .quiz(generateQuizForRound())
                 .answerOptions(generateAnswerOptions())
                 .correctAnswer(generateCorrectAnswer())
+                .answerExplanation(generateAnswerExplanation())
                 .build();
 
-        return gameRepository.save(nextGame).getGameId();
+        gameRepository.save(nextGame);
+
+        return new GameDto.GameResponseDto(nextGame);
     }
 
     private String generateQuizForRound() {
         // 각 단계에 따른 퀴즈 생성 로직 구현
-        return "Quiz for round ";
+        return "태웅이의 성은 무엇인가요?";
     }
 
     private List<String> generateAnswerOptions() {
         // 보기 4개 생성 로직 구현
-        return List.of("Option 1", "Option 2", "Option 3", "Option 4");
+        return List.of("김씨", "이씨", "박씨", "최씨");
     }
 
     private String generateCorrectAnswer() {
         // 단계에 따른 정답 생성 로직 구현
-        return "Correct answer for round ";
+        return "이씨";
+    }
+
+    private String generateAnswerExplanation() {
+        // 정답에 대한 해설 생성 로직 구현
+        return "해설";
     }
 }

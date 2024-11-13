@@ -9,5 +9,4 @@ import java.util.List;
 
 @Repository
 public interface GameRepository extends JpaRepository<Game, Long> {
-    List<Game> findByMemberAndIsCompletedFalse(Member member);  // 진행 중인 게임 조회
 }

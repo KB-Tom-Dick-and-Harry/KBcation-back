@@ -32,6 +32,7 @@ public class GameDto {
         private List<String> answerOptions;
         private String correctAnswer;
         private String yourAnswer;
+        private String  answerExplanation;
 
         public GameResponseDto(Game game) {
             this.gameId = game.getGameId();
@@ -40,6 +41,7 @@ public class GameDto {
             this.answerOptions = game.getAnswerOptions();
             this.correctAnswer = game.getCorrectAnswer();
             this.yourAnswer = game.getYourAnswer();
+            this.answerExplanation = game.getAnswerExplanation();
         }
     }
 }

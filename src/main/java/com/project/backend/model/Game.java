@@ -26,24 +26,20 @@ public class Game {
 
     private String correctAnswer;
     private String yourAnswer;
-
-    private boolean isCompleted;  // 게임 완료 여부를 나타냄
+    private String answerExplanation;
 
     @Builder
-    public Game(Member member, Integer gameRound, String quiz, List<String> answerOptions, String correctAnswer) {
+    public Game(Member member, Integer gameRound, String quiz, List<String> answerOptions, String correctAnswer, String answerExplanation) {
         this.member = member;
         this.gameRound = gameRound;
         this.quiz = quiz;
         this.answerOptions = answerOptions;
         this.correctAnswer = correctAnswer;
-        this.isCompleted = false;  // 처음 생성 시 미완료 상태
+        this.answerExplanation = answerExplanation;
     }
 
     public void setYourAnswer(String yourAnswer) {
         this.yourAnswer = yourAnswer;
     }
 
-    public void markAsCompleted() {
-        this.isCompleted = true;
-    }
 }
