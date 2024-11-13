@@ -43,6 +43,7 @@ public class GameDto {
             this.correctAnswer = game.getCorrectAnswer();
             this.yourAnswer = game.getYourAnswer();
             this.answerExplanation = game.getAnswerExplanation();
+            this.isCorrect = game.isCorrect();
         }
     }
 }
