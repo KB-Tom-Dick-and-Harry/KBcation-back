@@ -22,10 +22,10 @@ public class Chatbot {
     @Column(nullable = false)
     private Long memberId;
 
-    @Column(length = 255)
+    @Column(length = 1000)
     private String question;
 
-    @Column(length = 255)
+    @Column(columnDefinition = "TEXT")
     private String answer;
 
     @Builder
@@ -35,9 +35,7 @@ public class Chatbot {
         this.answer = answer;
     }
 
-    // 답변 업데이트 메서드
     public void updateAnswer(String answer) {
         this.answer = answer;
     }
 }
-
