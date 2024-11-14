@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map; // Map을 임포트
 
 @RestController
 @RequestMapping("/api/cards")
@@ -34,10 +35,16 @@ public class CardController {
         return ResponseEntity.ok(cardService.getCard(cardId));
     }
 
-    // 새로운 추천 엔드포인트 추가
     @Operation(summary = "카드 추천")
     @GetMapping("/recommendations")
     public ResponseEntity<List<CardDto.CardResponseDto>> getRecommendedCards() {
         return ResponseEntity.ok(cardService.getRecommendedCards());
+    }
+
+    // 사용자 자산 정보 기반으로 카드 추천 업데이트
+    @Operation(summary = "사용자 자산 정보를 기반으로 카드 추천 업데이트")
+    @PatchMapping("/recommendations")
+    public ResponseEntity<List<CardDto.CardResponseDto>> updateRecommendations(@RequestBody Map<String, Object> assetInfo) {
+        return ResponseEntity.ok(cardService.updateRecommendations(assetInfo));
     }
 }
