@@ -46,7 +46,7 @@ public class ConsumptionController {
     @Operation(summary = "회원별 소비 내역 조회",description = "특정 회원의 소비 내역을 조회합니다.")
     @GetMapping("/member/{memberId}")
     public ResponseEntity<List<ConsumptionDto.ConsumptionResponseDto>> getConsumptionsByMemberId(
-            @Parameter(description = "회원 ID") @PathVariable Integer memberId) {
+            @Parameter(description = "회원 ID") @PathVariable Long memberId) {
         List<ConsumptionDto.ConsumptionResponseDto> consumptions = consumptionServiceImpl.getConsumptionsByMemberId(memberId);
         return ResponseEntity.ok(consumptions);
     }

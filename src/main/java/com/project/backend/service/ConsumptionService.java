@@ -15,7 +15,7 @@ public interface ConsumptionService {
     ConsumptionDto.ConsumptionResponseDto getConsumption(Integer consumptionId);
 
     //특정 회원의 소비 내역 조회
-    List<ConsumptionDto.ConsumptionResponseDto> getConsumptionsByMemberId(Integer memberId);
+    List<ConsumptionDto.ConsumptionResponseDto> getConsumptionsByMemberId(Long memberId);
 
     //소비 내역 수정
     void updateConsumption(Integer consumptionId, ConsumptionDto.ConsumptionRequestDto requestDto);

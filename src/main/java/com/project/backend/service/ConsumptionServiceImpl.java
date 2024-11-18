@@ -1,12 +1,16 @@
 package com.project.backend.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.backend.dto.ConsumptionDto;
 import com.project.backend.model.Consumption;
 import com.project.backend.repository.ConsumptionRepository;
+import io.codef.api.EasyCodefResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,9 +57,10 @@ public class ConsumptionServiceImpl implements ConsumptionService {
     }
 
     @Override
-    public List<ConsumptionDto.ConsumptionResponseDto> getConsumptionsByMemberId(Integer memberId) {
+    public List<ConsumptionDto.ConsumptionResponseDto> getConsumptionsByMemberId(Long memberId) {
         return consumptionRepository.findByMemberId(memberId).stream()
                 .map(ConsumptionDto.ConsumptionResponseDto::new)
                 .collect(Collectors.toList());
     }
 }
+

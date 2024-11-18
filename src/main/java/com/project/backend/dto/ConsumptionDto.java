@@ -19,7 +19,7 @@ public class ConsumptionDto {
     @Getter
     @NoArgsConstructor
     public static class ConsumptionRequestDto {
-        private Integer memberId;
+        private Long memberId;
 
         @NotBlank(message = "소비 내역은 필수 입력값입니다.")
         private String consumptionDetails;
@@ -31,7 +31,7 @@ public class ConsumptionDto {
         private Date date;
 
         @Builder
-        public ConsumptionRequestDto(Integer memberId, String consumptionDetails, String category, Integer spendingAmount, String date) {
+        public ConsumptionRequestDto(Long memberId, String consumptionDetails, String category, Integer spendingAmount, String date) {
             this.memberId = memberId;
             this.consumptionDetails = consumptionDetails;
             this.category = category;
@@ -63,7 +63,7 @@ public class ConsumptionDto {
     @Getter
     public static class ConsumptionResponseDto {
         private Integer consumptionId;
-        private Integer memberId;
+        private Long memberId;
         private String consumptionDetails;
         private String category;
         private Integer spendingAmount;
