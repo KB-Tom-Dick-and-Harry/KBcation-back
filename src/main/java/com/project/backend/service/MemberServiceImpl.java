@@ -3,12 +3,12 @@ package com.project.backend.service;
 import com.project.backend.dto.MemberDto;
 import com.project.backend.model.Member;
 import com.project.backend.repository.MemberRepository;
-import com.project.backend.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
+    private final CodefService codefService;
 
     @Override
     @Transactional
@@ -57,5 +58,20 @@ public class MemberServiceImpl implements MemberService {
             throw new IllegalArgumentException("존재하지 않는 회원입니다.");
         }
         memberRepository.deleteById(memberId);
+    }
+
+    @Override
+    @Transactional
+    public MemberDto.MemberResponseDto connectAccount(Long memberId, Map<String, String> accountInfo) {
+        // CODEF 계정 등록 및 Connected ID 발급
+        String connectedId = codefService.registerAccount(accountInfo);
+
+        // Member 엔티티에 Connected ID 저장
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
+        member.updateConnectedId(connectedId);
+
+        // 변경된 Member 정보를 반환
+        return new MemberDto.MemberResponseDto(member);
     }
 }

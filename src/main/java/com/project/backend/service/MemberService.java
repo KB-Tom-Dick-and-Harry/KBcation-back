@@ -3,6 +3,7 @@ package com.project.backend.service;
 import com.project.backend.dto.MemberDto;
 
 import java.util.List;
+import java.util.Map;
 
 public interface MemberService {
     // 회원 생성
@@ -19,4 +20,7 @@ public interface MemberService {
 
     // 회원 삭제
     void deleteMember(Long memberId);
+
+    // connecedID 연결
+    MemberDto.MemberResponseDto connectAccount(Long memberId, Map<String, String> accountInfo);
 }

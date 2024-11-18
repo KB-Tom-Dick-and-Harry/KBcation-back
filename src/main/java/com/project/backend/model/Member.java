@@ -31,16 +31,26 @@ public class Member {
     @Column
     private Integer point;
 
+    @Column(length = 300, unique = true)
+    private String connectedId;
+
     @Builder
-    public Member(String userName, String gender, String birth, Integer point) {
+    public Member(String userName, String gender, String birth, Integer point, String connectedId) {
         this.userName = userName;
         this.gender = gender;
         this.birth = birth;
         this.point = 0;  // 초기 포인트는 0으로 설정
+        this.connectedId = connectedId;
     }
 
     // 포인트 업데이트 메서드
     public void updatePoint(Integer point) {
         this.point = point;
     }
+
+    // ConnectedId 업데이트 메서드
+    public void updateConnectedId(String connectedId) {
+        this.connectedId = connectedId;
+    }
+
 }

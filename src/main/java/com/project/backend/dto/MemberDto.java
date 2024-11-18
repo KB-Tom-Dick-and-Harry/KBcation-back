@@ -22,13 +22,15 @@ public class MemberDto {
         private String birth;
 
         private Integer point;
+        private String connectedId;
 
         @Builder
-        public MemberRequestDto(String userName, String gender, String birth, Integer point) {
+        public MemberRequestDto(String userName, String gender, String birth, Integer point, String connectedId) {
             this.userName = userName;
             this.gender = gender;
             this.birth = birth;
             this.point = point;
+            this.connectedId = connectedId;
         }
 
         public Member toEntity() {
@@ -37,6 +39,7 @@ public class MemberDto {
                     .gender(gender)
                     .birth(birth)
                     .point(point)
+                    .connectedId(connectedId)
                     .build();
         }
     }
@@ -49,6 +52,7 @@ public class MemberDto {
         private String gender;
         private String birth;
         private Integer point;
+        private String connectedId;
 
         public MemberResponseDto(Member member) {
             this.memberId = member.getMemberId();
@@ -56,6 +60,7 @@ public class MemberDto {
             this.gender = member.getGender();
             this.birth = member.getBirth();
             this.point = member.getPoint();
+            this.connectedId = member.getConnectedId();
         }
     }
 }
