@@ -52,5 +52,9 @@ public class Member {
         this.connectedId = connectedId;
     }
 
+    // 포인트 업데이트 메서드
+    public void updatePoint(Integer point) {
+        this.point = point;
+    }
 
 }

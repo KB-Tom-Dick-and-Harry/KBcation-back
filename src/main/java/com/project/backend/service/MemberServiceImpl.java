@@ -4,13 +4,13 @@ import com.project.backend.dto.MemberDto;
 import com.project.backend.entity.MemberEntity;
 import com.project.backend.model.Member;
 import com.project.backend.repository.MemberRepository;
-import com.project.backend.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
+    private final CodefService codefService;
     private final PasswordEncoder passwordEncoder;
 
     //1.회원가입

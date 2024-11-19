@@ -10,7 +10,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import jakarta.persistence.*;
 import java.util.Date;
 
 @Getter
@@ -24,7 +23,7 @@ public class Consumption {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer consumptionId;
 
-    private Integer memberId;
+    private Long memberId;
     private String consumptionDetails;
     private String category;
     private  Integer spendingAmount;

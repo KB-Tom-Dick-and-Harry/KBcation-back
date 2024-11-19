@@ -3,6 +3,7 @@ package com.project.backend.service;
 import com.project.backend.dto.MemberDto;
 
 import java.util.List;
+import java.util.Map;
 
 public interface MemberService {
     // 회원 생성
