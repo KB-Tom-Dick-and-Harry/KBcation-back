@@ -1,6 +1,7 @@
 package com.project.backend.service;
 
 import com.project.backend.dto.AccountInfoDto;
+import com.project.backend.entity.MemberEntity;
 import com.project.backend.model.AccountInfo;
 import com.project.backend.model.Member;
 import com.project.backend.repository.AccountInfoRepository;
@@ -21,7 +22,7 @@ public class AccountInfoServiceImpl implements AccountInfoService{
     @Override
     public AccountInfoDto.AccountInfoResponseDto saveAccountInfo(Long memberId, String connectedId, AccountInfoDto.AccountInfoRequestDto requestDto) {
         // Member 엔티티 조회
-        Member member = memberRepository.findById(memberId)
+        MemberEntity member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
 
         // AccountInfo 엔티티 저장

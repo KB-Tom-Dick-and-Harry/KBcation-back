@@ -1,5 +1,6 @@
 package com.project.backend.model;
 
+import com.project.backend.entity.MemberEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -26,10 +27,10 @@ public class AccountInfo {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "memberId", nullable = false)
-    private Member member;
+    private MemberEntity member;
 
     @Builder
-    public AccountInfo(String connectedId, String organization, String account, Member member) {
+    public AccountInfo(String connectedId, String organization, String account, MemberEntity member) {
         this.connectedId = connectedId;
         this.organization = organization;
         this.account = account;

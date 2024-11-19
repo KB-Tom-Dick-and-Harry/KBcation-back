@@ -1,5 +1,6 @@
 package com.project.backend.model;
 
+import com.project.backend.entity.MemberEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,7 +18,7 @@ public class Game {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "memberId")
-    private Member member;
+    private MemberEntity member;
 
     private Integer gameRound;
     private String quiz;
@@ -37,7 +38,7 @@ public class Game {
     private boolean isCorrect;
 
     @Builder
-    public Game(Member member, Integer gameRound, String quiz, List<String> answerOptions, String correctAnswer, String answerExplanation, boolean isCorrect) {
+    public Game(MemberEntity member, Integer gameRound, String quiz, List<String> answerOptions, String correctAnswer, String answerExplanation, boolean isCorrect) {
         this.member = member;
         this.gameRound = gameRound;
         this.quiz = quiz;
