@@ -32,8 +32,7 @@ public class SecurityConfig {
                     .authorizeHttpRequests(auth -> auth
                     .requestMatchers("/**").permitAll());
 
-
-//  로그인 기능 필요할 경우 활성화
+//      로그인 기능 필요할 경우 활성화
 //                .authorizeHttpRequests(auth -> auth
 //                        .requestMatchers("/login", "/member/save", "/register", "/public/**").permitAll()
 //                        .anyRequest().authenticated()) // 나머지 요청은 인증 필요

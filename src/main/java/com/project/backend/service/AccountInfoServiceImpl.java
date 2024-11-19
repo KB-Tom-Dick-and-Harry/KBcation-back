@@ -22,7 +22,7 @@ public class AccountInfoServiceImpl implements AccountInfoService{
     @Override
     public AccountInfoDto.AccountInfoResponseDto saveAccountInfo(Long memberId, String connectedId, AccountInfoDto.AccountInfoRequestDto requestDto) {
         // Member 엔티티 조회
-        Member member = memberRepository.findById(memberId)
+        MemberEntity member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
 
         // AccountInfo 엔티티 저장

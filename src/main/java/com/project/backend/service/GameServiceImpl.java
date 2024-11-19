@@ -45,7 +45,7 @@ public class GameServiceImpl implements GameService {
     @Override
     @Transactional
     public GameDto.GameResponseDto startNewGame(Long memberId) {
-        Member member = memberRepository.findById(memberId)
+        MemberEntity member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
         GameQuestion gameQuestion = webClient.post()

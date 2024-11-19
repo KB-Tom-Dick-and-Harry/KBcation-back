@@ -63,7 +63,7 @@ public class CodefService {
      */
     public String registerAccount(Long memberId, AccountInfoDto.AccountInfoRequestDto requestDto) {
         // Member 엔티티 조회
-        Member member = memberRepository.findById(memberId)
+        MemberEntity member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
 
         List<HashMap<String, Object>> accountList = new ArrayList<>();

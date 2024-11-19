@@ -27,10 +27,10 @@ public class AccountInfo {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "memberId", nullable = false)
-    private Member member;
+    private MemberEntity member;
 
     @Builder
-    public AccountInfo(String connectedId, String organization, String account, Member member) {
+    public AccountInfo(String connectedId, String organization, String account, MemberEntity member) {
         this.connectedId = connectedId;
         this.organization = organization;
         this.account = account;
