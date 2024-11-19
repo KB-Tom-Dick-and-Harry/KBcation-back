@@ -1,7 +1,6 @@
 package com.project.backend.service;
 
 import com.project.backend.dto.GameDto;
-import com.project.backend.entity.MemberEntity;
 import com.project.backend.model.Game;
 import com.project.backend.model.Member;
 import com.project.backend.repository.GameRepository;
@@ -45,7 +44,7 @@ public class GameServiceImpl implements GameService {
     @Override
     @Transactional
     public GameDto.GameResponseDto startNewGame(Long memberId) {
-        MemberEntity member = memberRepository.findById(memberId)
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
         GameQuestion gameQuestion = webClient.post()

@@ -1,6 +1,5 @@
 package com.project.backend.config;
 
-import com.project.backend.entity.MemberEntity;
 import com.project.backend.model.Member;
 import com.project.backend.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;

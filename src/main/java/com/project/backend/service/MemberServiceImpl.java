@@ -1,16 +1,13 @@
 package com.project.backend.service;
 
 import com.project.backend.dto.MemberDto;
-import com.project.backend.entity.MemberEntity;
 import com.project.backend.model.Member;
 import com.project.backend.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,76 +16,62 @@ import java.util.stream.Collectors;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
-    private final CodefService codefService;
-    private final PasswordEncoder passwordEncoder;
 
-    //1.회원가입
     @Override
     @Transactional
     public Long createMember(MemberDto.MemberRequestDto requestDto) {
-        if (memberRepository.existsByEmail(requestDto.getEmail())) {
-            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
-        }
-
+        // 사용자 이름 중복 확인
         if (memberRepository.existsByUserName(requestDto.getUserName())) {
-            throw new IllegalArgumentException("이미 존재하는 회원 이름입니다.");
+            throw new IllegalArgumentException("이미 존재하는 사용자 이름입니다.");
         }
 
-
-        // 비밀번호 암호화
-        String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
-        requestDto.setPassword(encodedPassword);
-
-        // 엔티티 생성 및 저장
-        MemberEntity memberEntity = requestDto.toEntity(); // 수정
-        MemberEntity savedMember = memberRepository.save(memberEntity); // 저장된 엔티티 반환
-        return savedMember.getMemberId(); // ID 반환
-    }
-
-
-    //2.로그인
-    public MemberDto.MemberResponseDto login(String email, String password) {
-        MemberEntity member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
-
-        if (!passwordEncoder.matches(password, member.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        // 연결된 ID 중복 확인
+        if (requestDto.getConnectedId() != null &&
+                memberRepository.existsByConnectedId(requestDto.getConnectedId())) {
+            throw new IllegalArgumentException("이미 존재하는 연결된 ID입니다.");
         }
 
-        return new MemberDto.MemberResponseDto(member);
+        // DTO -> Entity 변환 후 저장
+        Member member = memberRepository.save(requestDto.toEntity());
+        return member.getMemberId();
     }
 
-    //3.회원 전체 조회
     @Override
     public List<MemberDto.MemberResponseDto> getAllMembers() {
         return memberRepository.findAll().stream()
-                .map(MemberDto.MemberResponseDto::fromEntity) // 정적 팩토리 메서드 사용
+                .map(MemberDto.MemberResponseDto::fromEntity) // Entity -> DTO 변환
                 .collect(Collectors.toList());
     }
 
-    //4.특정 회원 조회
     @Override
     public MemberDto.MemberResponseDto getMember(Long memberId) {
-        MemberEntity memberEntity = memberRepository.findById(memberId)
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-        return MemberDto.MemberResponseDto.fromEntity(memberEntity); // 정적 팩토리 메서드 사용
+        return MemberDto.MemberResponseDto.fromEntity(member);
     }
 
-    // 5.회원 포인트 업데이트
+    @Override
+    public MemberDto.MemberResponseDto getMemberByUserName(String userName) {
+        Member member = memberRepository.findByUserName(userName)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 이름입니다."));
+        return MemberDto.MemberResponseDto.fromEntity(member);
+    }
+
+    @Override
+    public MemberDto.MemberResponseDto getMemberByConnectedId(String connectedId) {
+        Member member = memberRepository.findByConnectedId(connectedId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 연결된 ID입니다."));
+        return MemberDto.MemberResponseDto.fromEntity(member);
+    }
+
     @Override
     @Transactional
     public void updateMemberPoint(Long memberId, Integer point) {
-        //MEMBER를 안전하게 가져옵니다.
-        MemberEntity memberEntity = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않은 회원입니다."));
-
-        // 포인트 업데이트
-        memberEntity.setPoint(point);
-
-        //  변경 사항 자동 저장(JPA의 변경 감지 기능 활용)
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        member.updatePoint(point);
     }
 
-    // 6.회원 삭제
     @Override
     @Transactional
     public void deleteMember(Long memberId) {
@@ -98,16 +81,20 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.deleteById(memberId);
     }
 
-    //7.사용자 이름 중복 확인
     @Override
-    public boolean existsByUserName(String name) {
-        // repository를 사용하여 데이터베이스에서 사용자 이름이 존재하는지 확인
-        return memberRepository.existsByUserName(name);
-
+    public boolean existsByUserName(String userName) {
+        return memberRepository.existsByUserName(userName);
     }
+
     @Override
-    public boolean existsByEmail(String email) {
-        // repository를 사용하여 데이터베이스에서 이메일이 존재하는지 확인
-        return memberRepository.existsByEmail(email);
+    public boolean existsByConnectedId(String connectedId) {
+        return memberRepository.existsByConnectedId(connectedId);
+    }
+
+    @Override
+    public MemberDto.MemberResponseDto getMemberByUserNameAndConnectedIdIsNull(String userName) {
+        Member member = memberRepository.findByUserNameAndConnectedIdIsNull(userName)
+                .orElseThrow(() -> new IllegalArgumentException("해당 조건을 만족하는 사용자가 없습니다."));
+        return MemberDto.MemberResponseDto.fromEntity(member);
     }
 }

@@ -1,30 +1,31 @@
-package com.project.backend.service;
+package com.project.backend.security;
 
-import com.project.backend.repository.UserRepository;
+import com.project.backend.model.Member;
+import com.project.backend.repository.MemberRepository;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CustomUserDetailsService {
+public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
 
-    public CustomUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public CustomUserDetailsService(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
     }
 
-
-
-
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username)
-                .map(user -> User.builder()
-                        .username(user.getUsername())
-                        .password(user.getPassword()) // 암호화된 비밀번호
-                        .roles(user.getRole()) // 사용자 권한
-                        .build())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+        Member member = memberRepository.findByUserName(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+
+        return User.builder()
+                .username(member.getUserName())
+                .password(member.getPassword())
+                .roles("USER") // 필요시 사용자 역할 설정
+                .build();
     }
 }

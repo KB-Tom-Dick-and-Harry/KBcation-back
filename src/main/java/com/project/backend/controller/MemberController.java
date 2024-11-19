@@ -1,6 +1,5 @@
 package com.project.backend.controller;
 
-import com.project.backend.dto.MemberDto;
 import com.project.backend.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -10,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import com.project.backend.dto.MemberDto;
 
 
 import java.util.List;
@@ -67,40 +67,4 @@ public class MemberController {
     public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
-
-    @PostMapping("/member/save")
-    public String saveMember(
-            @RequestParam("memberEmail") String email,
-            @RequestParam("memberPassword") String password,
-            @RequestParam("memberName") String name,
-            @RequestParam(value = "gender", defaultValue = "unknown") String gender,
-            @RequestParam(value = "birth", defaultValue = "unknown") String birth
-    ) {
-        //데이터 검증 및 비밀번호 암호화
-        if (memberService.existsByUserName(name)) {
-            throw new IllegalArgumentException("이미 존재하는 회원입니다.");
-        }
-        if (memberService.existsByEmail(email)) {
-            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
-        }
-
-        String encodedPassword = passwordEncoder.encode(password);
-
-        MemberDto.MemberRequestDto memberRequestDto =  MemberDto.MemberRequestDto.builder()
-                .userName(name)
-                .email(email)
-                .password(encodedPassword)
-                .gender(gender)
-                .birth(birth)
-                .point(0)
-                .build();
-        memberRequestDto.setPassword(encodedPassword);
-
-        //회원가입 처리
-        memberService.createMember(memberRequestDto);
-
-        return "redirect:/login"; //성공 후 홈 화면 리다이렉트
-    }
-
-
 }
