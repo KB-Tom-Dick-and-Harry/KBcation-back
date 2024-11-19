@@ -51,10 +51,4 @@ public class Member {
         this.point = point == null ? 0 : point;  // 초기 포인트는 0으로 설정
         this.connectedId = connectedId;
     }
-
-    // 포인트 업데이트 메서드
-    public void updatePoint(Integer point) {
-        this.point = point;
-    }
-
 }
