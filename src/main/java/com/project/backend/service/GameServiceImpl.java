@@ -1,6 +1,7 @@
 package com.project.backend.service;
 
 import com.project.backend.dto.GameDto;
+import com.project.backend.entity.MemberEntity;
 import com.project.backend.model.Game;
 import com.project.backend.model.Member;
 import com.project.backend.repository.GameRepository;

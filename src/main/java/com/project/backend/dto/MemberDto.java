@@ -58,8 +58,8 @@ public  class MemberDto {
             this.point = point;
         }
 
-        public MemberEntity toEntity() {
-            return MemberEntity.builder()
+        public Member toEntity() {
+            return Member.builder()
                     .userName(this.userName)
                     .email(this.email) // 이메일 추가
                     .password(this.password) // 비밀번호 암호화 처리됨
@@ -83,7 +83,7 @@ public  class MemberDto {
 
 
 
-        public MemberResponseDto(MemberEntity entity) {
+        public MemberResponseDto(Member entity) {
             this.memberId = entity.getMemberId();
             this.userName = entity.getUserName();
             this.email = entity.getEmail();
@@ -94,7 +94,7 @@ public  class MemberDto {
         }
 
         // 정적 팩토리 메서드 추가
-        public static MemberResponseDto fromEntity(MemberEntity entity) {
+        public static MemberResponseDto fromEntity(Member entity) {
             return new MemberResponseDto(entity);
         }
     }

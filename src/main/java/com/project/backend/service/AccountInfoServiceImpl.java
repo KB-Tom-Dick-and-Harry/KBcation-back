@@ -1,6 +1,7 @@
 package com.project.backend.service;
 
 import com.project.backend.dto.AccountInfoDto;
+import com.project.backend.entity.MemberEntity;
 import com.project.backend.model.AccountInfo;
 import com.project.backend.model.Member;
 import com.project.backend.repository.AccountInfoRepository;

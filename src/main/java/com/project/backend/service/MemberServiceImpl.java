@@ -40,15 +40,15 @@ public class MemberServiceImpl implements MemberService {
         requestDto.setPassword(encodedPassword);
 
         // 엔티티 생성 및 저장
-        MemberEntity memberEntity = requestDto.toEntity(); // 수정
-        MemberEntity savedMember = memberRepository.save(memberEntity); // 저장된 엔티티 반환
+        Member member = requestDto.toEntity(); // 수정
+        Member savedMember = memberRepository.save(member); // 저장된 엔티티 반환
         return savedMember.getMemberId(); // ID 반환
     }
 
 
     //2.로그인
     public MemberDto.MemberResponseDto login(String email, String password) {
-        MemberEntity member = memberRepository.findByEmail(email)
+        Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
 
         if (!passwordEncoder.matches(password, member.getPassword())) {
@@ -69,9 +69,9 @@ public class MemberServiceImpl implements MemberService {
     //4.특정 회원 조회
     @Override
     public MemberDto.MemberResponseDto getMember(Long memberId) {
-        MemberEntity memberEntity = memberRepository.findById(memberId)
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-        return MemberDto.MemberResponseDto.fromEntity(memberEntity); // 정적 팩토리 메서드 사용
+        return MemberDto.MemberResponseDto.fromEntity(member); // 정적 팩토리 메서드 사용
     }
 
     // 5.회원 포인트 업데이트
@@ -79,11 +79,11 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public void updateMemberPoint(Long memberId, Integer point) {
         //MEMBER를 안전하게 가져옵니다.
-        MemberEntity memberEntity = memberRepository.findById(memberId)
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않은 회원입니다."));
 
         // 포인트 업데이트
-        memberEntity.setPoint(point);
+        member.setPoint(point);
 
         //  변경 사항 자동 저장(JPA의 변경 감지 기능 활용)
     }

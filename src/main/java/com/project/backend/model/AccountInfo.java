@@ -1,5 +1,6 @@
 package com.project.backend.model;
 
+import com.project.backend.entity.MemberEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

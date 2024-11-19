@@ -22,6 +22,10 @@ public class Member {
     @Column(length = 50,nullable = false)
     private String userName;
 
+    @Column(length = 50)
+    private String email;
+
+
     @Column(length = 60, nullable = false) // 암호화된 비밀번호는 일반적으로 최대 60자
     private String password; // 비밀번호 필드 추가
 
@@ -43,18 +47,13 @@ public class Member {
     }
 
     @Builder
-    public Member(String userName, String gender, String birth, Integer point, String connectedId) {
+    public Member(String userName, String email, String gender, String birth, Integer point, String connectedId) {
         this.userName = userName;
+        this.email = email;
         this.password = password;// Builder에서 비밀번호 설정
         this.gender = gender;
         this.birth = birth;
         this.point = point == null ? 0 : point;  // 초기 포인트는 0으로 설정
         this.connectedId = connectedId;
     }
-
-    // 포인트 업데이트 메서드
-    public void updatePoint(Integer point) {
-        this.point = point;
-    }
-
 }

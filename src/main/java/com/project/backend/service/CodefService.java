@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.backend.dto.AccountInfoDto;
+import com.project.backend.entity.MemberEntity;
 import com.project.backend.model.AccountInfo;
 import com.project.backend.model.Member;
 import com.project.backend.repository.MemberRepository;
