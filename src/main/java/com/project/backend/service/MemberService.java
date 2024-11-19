@@ -8,6 +8,8 @@ public interface MemberService {
     // 회원 생성
     Long createMember(MemberDto.MemberRequestDto requestDto);
 
+    MemberDto.MemberResponseDto login(String email, String password);
+
     // 회원 전체 조회
     List<MemberDto.MemberResponseDto> getAllMembers();
 
@@ -19,4 +21,8 @@ public interface MemberService {
 
     // 회원 삭제
     void deleteMember(Long memberId);
+
+    boolean existsByUserName(String name);
+
+    boolean existsByEmail(String email);
 }
