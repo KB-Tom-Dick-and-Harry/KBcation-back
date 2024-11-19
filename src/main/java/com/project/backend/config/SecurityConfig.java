@@ -30,17 +30,21 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // CSRF 비활성화
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/member/save", "/register", "/public/**").permitAll()
-                        .anyRequest().authenticated()) // 나머지 요청은 인증 필요
-                .formLogin(form -> form
-                        .loginPage("/login") //커스텀 로그인 페이지 경로
-                        .defaultSuccessUrl("/home", true) //로그인 성공 후 이동
-                        .failureUrl("/login?error=true") //로그인 실패 시 이동
-                        .permitAll())
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login")
-                        .permitAll());
+                        .requestMatchers("/**").permitAll());
+
+//      로그인 기능 필요할 경우 활성화
+//                .authorizeHttpRequests(auth -> auth
+//                        .requestMatchers("/login", "/member/save", "/register", "/public/**").permitAll()
+//                        .anyRequest().authenticated()) // 나머지 요청은 인증 필요
+//                .formLogin(form -> form
+//                        .loginPage("/login") //커스텀 로그인 페이지 경로
+//                        .defaultSuccessUrl("/home", true) //로그인 성공 후 이동
+//                        .failureUrl("/login?error=true") //로그인 실패 시 이동
+//                        .permitAll())
+//                .logout(logout -> logout
+//                        .logoutUrl("/logout")
+//                        .logoutSuccessUrl("/login")
+//                        .permitAll());
         return http.build();
     }
 }
