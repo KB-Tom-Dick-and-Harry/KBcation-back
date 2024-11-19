@@ -59,19 +59,4 @@ public class MemberServiceImpl implements MemberService {
         }
         memberRepository.deleteById(memberId);
     }
-
-    @Override
-    @Transactional
-    public MemberDto.MemberResponseDto connectAccount(Long memberId, Map<String, String> accountInfo) {
-        // CODEF 계정 등록 및 Connected ID 발급
-        String connectedId = codefService.registerAccount(accountInfo);
-
-        // Member 엔티티에 Connected ID 저장
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
-        member.updateConnectedId(connectedId);
-
-        // 변경된 Member 정보를 반환
-        return new MemberDto.MemberResponseDto(member);
-    }
 }

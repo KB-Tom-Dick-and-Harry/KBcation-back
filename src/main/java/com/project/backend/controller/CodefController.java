@@ -1,10 +1,8 @@
 package com.project.backend.controller;
 
+import com.project.backend.dto.AccountInfoDto;
 import com.project.backend.dto.ConsumptionDto;
-import com.project.backend.dto.MemberDto;
-import com.project.backend.service.CodefService;
-import com.project.backend.service.ConsumptionServiceImpl;
-import com.project.backend.service.MemberServiceImpl;
+import com.project.backend.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
@@ -24,14 +22,19 @@ public class CodefController {
     private final MemberServiceImpl memberService;
     private final CodefService codefService;
     private final ConsumptionServiceImpl consumptionServiceImpl;
+    private final AccountInfoServiceImpl accountInfoService;
 
     // CODEF Connected ID 생성 후 저장
-    @PostMapping("/connectedId/{memberId}")
-    public ResponseEntity<MemberDto.MemberResponseDto> createConnectedId(
+    @PostMapping("/connect-account/{memberId}")
+    public ResponseEntity<AccountInfoDto.AccountInfoResponseDto> connectAccount(
             @PathVariable Long memberId,
-            @RequestBody Map<String, String> accountInfo) {
-        MemberDto.MemberResponseDto memberResponseDto = memberService.connectAccount(memberId, accountInfo);
-        return ResponseEntity.ok(memberResponseDto);
+            @RequestBody AccountInfoDto.AccountInfoRequestDto requestDto) {
+        // connectedId 생성
+        String connectedId = codefService.registerAccount(memberId, requestDto);
+
+        // accountInfo 저장
+        AccountInfoDto.AccountInfoResponseDto responseDto = accountInfoService.saveAccountInfo(memberId, connectedId, requestDto);
+        return ResponseEntity.ok(responseDto);
     }
 
     // 비동기로 11개월치 데이터를 저장

@@ -20,7 +20,4 @@ public interface MemberService {
 
     // 회원 삭제
     void deleteMember(Long memberId);
-
-    // connecedID 연결
-    MemberDto.MemberResponseDto connectAccount(Long memberId, Map<String, String> accountInfo);
 }
