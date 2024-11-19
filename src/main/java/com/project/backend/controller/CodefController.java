@@ -37,20 +37,6 @@ public class CodefController {
         return ResponseEntity.ok(responseDto);
     }
 
-    // 비동기로 11개월치 데이터를 저장
-    @Async
-    public void saveRemainingYearTransactionData(AccountInfoDto.AccountInfoResponseDto accountInfo, Long memberId) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-
-        // 1개월 전 날짜부터 1년 전 날짜까지 계산
-        String oneMonthAgo = sdf.format(new Date(System.currentTimeMillis() - 30L * 24 * 60 * 60 * 1000));
-        String oneYearAgo = sdf.format(new Date(System.currentTimeMillis() - 365L * 24 * 60 * 60 * 1000));
-
-        // 11개월치 데이터 조회 및 저장
-        String responseJson = codefService.getTransactionList(accountInfo, oneYearAgo, oneMonthAgo);
-        consumptionServiceImpl.saveTransactionData(responseJson, memberId);
-    }
-
     // 금융계좌 연결 시 1개월치의 거래내역 조회 후 현재 잔액 및 최근 거래내역 반환
     @PostMapping("/fetch/{memberId}")
     public ResponseEntity<Map<String, Object>> fetchAndSaveTransactions(
@@ -65,9 +51,6 @@ public class CodefController {
         // 1개월치 데이터 조회 및 저장
         String responseJson = codefService.getTransactionList(accountInfo, oneMonthAgo, today);
         int currentBalance = consumptionServiceImpl.saveTransactionData(responseJson, memberId);
-
-        // 비동기로 11개월치 데이터 저장
-        saveRemainingYearTransactionData(accountInfo, memberId);
 
         // 최신 3건 거래내역 조회
         List<ConsumptionDto.ConsumptionResponseDto> recentTransactions = consumptionServiceImpl.getRecentTransactions(memberId);
@@ -103,5 +86,38 @@ public class CodefController {
         response.put("recentTransactions", recentTransactions);
 
         return ResponseEntity.ok(response);
+    }
+
+    // 6개월치 거래내역 저장 컨트롤러 메서드
+    @PostMapping("/save-six-months/{memberId}")
+    public ResponseEntity<String> saveSixMonthsTransactionData(@PathVariable Long memberId) {
+        // AccountInfo 데이터 조회
+        AccountInfoDto.AccountInfoResponseDto accountInfo = accountInfoService.getAccountInfo(memberId);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+
+        // 현재 날짜와 6개월 전 날짜 계산
+        String today = sdf.format(new Date());
+        String sixMonthsAgo = sdf.format(new Date(System.currentTimeMillis() - 180L * 24 * 60 * 60 * 1000));
+
+        // 6개월치 데이터 조회 및 저장
+        String responseJson = codefService.getTransactionList(accountInfo, sixMonthsAgo, today);
+        consumptionServiceImpl.saveTransactionData(responseJson, memberId);
+
+        return ResponseEntity.ok("6개월치 거래내역이 저장되었습니다.");
+    }
+
+    // 비동기로 11개월치 데이터를 저장
+    @Async
+    public void saveRemainingYearTransactionData(AccountInfoDto.AccountInfoResponseDto accountInfo, Long memberId) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+
+        // 1개월 전 날짜부터 1년 전 날짜까지 계산
+        String oneMonthAgo = sdf.format(new Date(System.currentTimeMillis() - 30L * 24 * 60 * 60 * 1000));
+        String oneYearAgo = sdf.format(new Date(System.currentTimeMillis() - 365L * 24 * 60 * 60 * 1000));
+
+        // 11개월치 데이터 조회 및 저장
+        String responseJson = codefService.getTransactionList(accountInfo, oneYearAgo, oneMonthAgo);
+        consumptionServiceImpl.saveTransactionData(responseJson, memberId);
     }
 }

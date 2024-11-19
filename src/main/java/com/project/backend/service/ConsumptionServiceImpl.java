@@ -87,10 +87,6 @@ public class ConsumptionServiceImpl implements ConsumptionService {
 
             // 거래내역 리스트 추출
             JsonNode transactionList = dataNode.get("resTrHistoryList");
-            if (transactionList == null || !transactionList.isArray()) {
-                System.out.println("거래내역(resTrHistoryList)이 없거나 배열 형식이 아닙니다.");
-                return currentBalance; // 거래내역이 없는 경우 현재 잔액만 반환
-            }
 
             // 거래내역 처리
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
