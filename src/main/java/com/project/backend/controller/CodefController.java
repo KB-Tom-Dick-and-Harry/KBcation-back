@@ -39,7 +39,7 @@ public class CodefController {
 
     // 비동기로 11개월치 데이터를 저장
     @Async
-    public void saveRemainingYearTransactionData(String connectedId, Map<String, String> accountInfo, Long memberId) {
+    public void saveRemainingYearTransactionData(AccountInfoDto.AccountInfoResponseDto accountInfo, Long memberId) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
         // 1개월 전 날짜부터 1년 전 날짜까지 계산
@@ -47,29 +47,27 @@ public class CodefController {
         String oneYearAgo = sdf.format(new Date(System.currentTimeMillis() - 365L * 24 * 60 * 60 * 1000));
 
         // 11개월치 데이터 조회 및 저장
-        String responseJson = codefService.getTransactionList(connectedId, accountInfo, oneYearAgo, oneMonthAgo);
+        String responseJson = codefService.getTransactionList(accountInfo, oneYearAgo, oneMonthAgo);
         consumptionServiceImpl.saveTransactionData(responseJson, memberId);
     }
 
     // 금융계좌 연결 시 1개월치의 거래내역 조회 후 현재 잔액 및 최근 거래내역 반환
     @PostMapping("/fetch/{memberId}")
     public ResponseEntity<Map<String, Object>> fetchAndSaveTransactions(
-            @PathVariable Long memberId,
-            @RequestBody Map<String, String> accountInfo) {
-        String connectedId = accountInfo.get("connectedId");
+            @PathVariable Long memberId) {
+        // AccountInfo 데이터 조회
+        AccountInfoDto.AccountInfoResponseDto accountInfo = accountInfoService.getAccountInfo(memberId);
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         String today = sdf.format(new Date());
         String oneMonthAgo = sdf.format(new Date(System.currentTimeMillis() - 30L * 24 * 60 * 60 * 1000));
 
         // 1개월치 데이터 조회 및 저장
-        System.out.println("Start Date: " + oneMonthAgo);
-        System.out.println("End Date: " + today);
-        String responseJson = codefService.getTransactionList(connectedId, accountInfo, oneMonthAgo, today);
+        String responseJson = codefService.getTransactionList(accountInfo, oneMonthAgo, today);
         int currentBalance = consumptionServiceImpl.saveTransactionData(responseJson, memberId);
 
         // 비동기로 11개월치 데이터 저장
-        saveRemainingYearTransactionData(connectedId, accountInfo, memberId);
+        saveRemainingYearTransactionData(accountInfo, memberId);
 
         // 최신 3건 거래내역 조회
         List<ConsumptionDto.ConsumptionResponseDto> recentTransactions = consumptionServiceImpl.getRecentTransactions(memberId);
@@ -85,15 +83,15 @@ public class CodefController {
     // 최신 거래내역 업데이트 및 조회
     @PostMapping("/update/{memberId}")
     public ResponseEntity<Map<String, Object>> updateAndFetchRecentTransactions(
-            @PathVariable Long memberId,
-            @RequestBody Map<String, String> accountInfo) {
-        String connectedId = accountInfo.get("connectedId");
+            @PathVariable Long memberId) {
+        // AccountInfo 데이터 조회
+        AccountInfoDto.AccountInfoResponseDto accountInfo = accountInfoService.getAccountInfo(memberId);
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM1dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         String today = sdf.format(new Date());
 
         // 당일 거래내역 조회 및 저장
-        String responseJson = codefService.getTransactionList(connectedId, accountInfo, today, today);
+        String responseJson = codefService.getTransactionList(accountInfo, today, today);
         int currentBalance = consumptionServiceImpl.saveTransactionData(responseJson, memberId);
 
         // 최신 3건 거래내역 조회

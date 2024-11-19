@@ -105,19 +105,12 @@ public class CodefService {
         }
     }
 
-    /**
-     * 거래내역 조회 요청
-     *
-     * @param connectedId 사용자 Connected ID
-     * @param accountInfo 사용자 계좌 정보 (아이디, 비밀번호, 계좌번호 등)
-     * @return 거래내역 API 응답 결과
-     */
-
-    public String getTransactionList(String connectedId, Map<String, String> accountInfo, String startDate, String endDate) {
+    // 거래내역 조회 요청
+    public String getTransactionList(AccountInfoDto.AccountInfoResponseDto accountInfo, String startDate, String endDate) {
         HashMap<String, Object> requestBody = new HashMap<>();
-        requestBody.put("organization", accountInfo.get("organization"));
-        requestBody.put("connectedId", connectedId);
-        requestBody.put("account", accountInfo.get("account"));
+        requestBody.put("organization", accountInfo.getOrganization());
+        requestBody.put("connectedId", accountInfo.getConnectedId());
+        requestBody.put("account", accountInfo.getAccount());
         requestBody.put("startDate", startDate);
         requestBody.put("endDate", endDate);
         requestBody.put("orderBy", "0"); //최신순 정렬

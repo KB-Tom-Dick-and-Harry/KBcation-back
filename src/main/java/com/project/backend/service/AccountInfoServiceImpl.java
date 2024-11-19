@@ -16,7 +16,6 @@ public class AccountInfoServiceImpl implements AccountInfoService{
 
     private final MemberRepository memberRepository;
     private final AccountInfoRepository accountInfoRepository;
-    private final CodefService codefService;
 
     @Transactional
     @Override
@@ -37,4 +36,11 @@ public class AccountInfoServiceImpl implements AccountInfoService{
 
         return new AccountInfoDto.AccountInfoResponseDto(accountInfo);
     }
+
+    public AccountInfoDto.AccountInfoResponseDto getAccountInfo(Long memberId) {
+        AccountInfo accountInfo = accountInfoRepository.findByMember_MemberId(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 회원의 AccountInfo를 찾을 수 없습니다."));
+        return new AccountInfoDto.AccountInfoResponseDto(accountInfo);
+    }
+
 }
