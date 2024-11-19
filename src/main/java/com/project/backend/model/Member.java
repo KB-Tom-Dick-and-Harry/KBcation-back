@@ -31,7 +31,7 @@ public class Member {
     @Column
     private Integer point;
 
-    @Column(length = 300, unique = true)
+    @Column(length = 1000)
     private String connectedId;
 
     @Builder

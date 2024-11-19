@@ -1,13 +1,18 @@
 package com.project.backend.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.codef.api.EasyCodef;
 import io.codef.api.EasyCodefServiceType;
 import io.codef.api.EasyCodefUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -15,21 +20,31 @@ public class CodefService {
 
     private final EasyCodef codef;
 
+    // `application-secret.properties`에서 값을 주입받음
+    @Value("${codef.demo.client-id}")
+    private String demoClientId;
+
+    @Value("${codef.demo.client-secret}")
+    private String demoClientSecret;
+
+    @Value("${codef.public-key}")
+    private String publicKey;
+
     public CodefService() {
-        // EasyCodef 객체 생성
         this.codef = new EasyCodef();
+    }
 
-        // 데모 클라이언트 정보 설정
-        codef.setClientInfoForDemo("YOUR_DEMO_CLIENT_ID", "YOUR_DEMO_CLIENT_SECRET");
-
-        // RSA 암호화를 위한 퍼블릭 키 설정
-        codef.setPublicKey("YOUR_PUBLIC_KEY");
+    // Codef 설정 초기화 메서드
+    @PostConstruct
+    public void initializeCodef() {
+        codef.setClientInfoForDemo(demoClientId, demoClientSecret); // Demo Client 정보 설정
+        codef.setPublicKey(publicKey); // RSA Public Key 설정
     }
 
     public String getAccessToken() {
         // 토큰 자동 관리: 라이브러리가 자동으로 처리
         try {
-            return codef.requestToken(EasyCodefServiceType.SANDBOX);
+            return codef.requestToken(EasyCodefServiceType.DEMO);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -65,9 +80,45 @@ public class CodefService {
 
         // Connected ID 발급 요청
         try {
-            return codef.createAccount(EasyCodefServiceType.DEMO, parameterMap);
+            String responseJson = codef.createAccount(EasyCodefServiceType.DEMO, parameterMap);
+
+            // JSON 파싱
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode rootNode = objectMapper.readTree(responseJson);
+            JsonNode dataNode = rootNode.get("data");
+            if (dataNode != null && dataNode.has("connectedId")) {
+                return dataNode.get("connectedId").asText(); // connectedId 추출
+            } else {
+                throw new RuntimeException("connectedId를 찾을 수 없습니다.");
+            }
         } catch (UnsupportedEncodingException | JsonProcessingException | InterruptedException e) {
             throw new RuntimeException("Connected ID 발급 요청 실패", e);
+        }
+    }
+
+    /**
+     * 거래내역 조회 요청
+     *
+     * @param connectedId 사용자 Connected ID
+     * @param accountInfo 사용자 계좌 정보 (아이디, 비밀번호, 계좌번호 등)
+     * @return 거래내역 API 응답 결과
+     */
+
+    public String getTransactionList(String connectedId, Map<String, String> accountInfo, String startDate, String endDate) {
+        HashMap<String, Object> requestBody = new HashMap<>();
+        requestBody.put("organization", accountInfo.get("organization"));
+        requestBody.put("connectedId", connectedId);
+        requestBody.put("account", accountInfo.get("account"));
+        requestBody.put("startDate", startDate);
+        requestBody.put("endDate", endDate);
+        requestBody.put("orderBy", "0"); //최신순 정렬
+        requestBody.put("inquiryType", "1"); //기본 조회
+
+        // CODEF 거래내역 조회 API 호출
+        try {
+            return codef.requestProduct("/v1/kr/bank/p/account/transaction-list", EasyCodefServiceType.DEMO, requestBody);
+        } catch (Exception e) {
+            throw new RuntimeException("거래내역 조회 실패", e);
         }
     }
 }
