@@ -1,5 +1,6 @@
 package com.project.backend.config;
 
+import com.project.backend.entity.MemberEntity;
 import com.project.backend.model.Member;
 import com.project.backend.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,19 +15,22 @@ public class DataInitializer {
 
     private final MemberRepository memberRepository;
 
-    @PostConstruct
+    /*@PostConstruct
     @Transactional
     public void init() {
         // Member가 존재하지 않을 경우에만 생성
         if (memberRepository.findByUserName("홍길동").isEmpty()) {
-            Member member = Member.builder()
+            MemberEntity member = Member.builder()
                     .userName("홍길동")
+                    .email("hong@test.com")
+                    .password("encoded_password")
                     .gender("Male")
                     .birth("1990-01-01")
                     .point(0)
+                    .connectedId("connection-id-example")
                     .build();
             memberRepository.save(member);
-            System.out.println("Member가 생성되었습니다. ID: " + member.getMemberId());
+            System.out.println("MemberEntity가 생성되었습니다. ID: " + member.getMemberId());
         }
-    }
+    }*/
 }
