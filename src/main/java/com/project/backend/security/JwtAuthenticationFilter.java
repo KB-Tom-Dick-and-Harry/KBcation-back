@@ -37,9 +37,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String username = jwtTokenProvider.getUserNameFromToken(jwt);
                 log.debug("Username from token: {}", username);
 
+                Long memberId = jwtTokenProvider.getMemberIdFromToken(jwt);
+                log.debug("MemberId from token: {}", memberId);
+
+                // UserDetails와 memberId를 함께 principal로 설정
                 UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
                 UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                        new UsernamePasswordAuthenticationToken(new CustomPrincipal(memberId, userDetails), null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }

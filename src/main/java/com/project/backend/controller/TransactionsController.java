@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.project.backend.util.SecurityUtil.getCurrentMemberId;
+
 @Tag(name = "Transaction",description = "거래 내역 업로드 API")
 @RestController
 @RequestMapping("/api/transactions")
@@ -27,26 +29,16 @@ public class TransactionsController {
     private final AccountInfoServiceImpl accountInfoService;
 
     // CODEF Connected ID 생성 후 저장
-    @Operation(summary = "connected Id 생성 및 계좌 정보 저장")
-    @PostMapping("/create/accountInfo/{memberId}")
-    public ResponseEntity<AccountInfoDto.AccountInfoResponseDto> connectAccount(
-            @PathVariable Long memberId,
+    @Operation(summary = "금융 계좌 연동")
+    @PostMapping("/create/accountInfo")
+    public ResponseEntity<Map<String, Object>> connectAccount(
             @RequestBody AccountInfoDto.AccountInfoRequestDto requestDto) {
+        Long memberId = getCurrentMemberId();
         // connectedId 생성
         String connectedId = codefService.registerAccount(memberId, requestDto);
 
         // accountInfo 저장
-        AccountInfoDto.AccountInfoResponseDto responseDto = accountInfoService.saveAccountInfo(memberId, connectedId, requestDto);
-        return ResponseEntity.ok(responseDto);
-    }
-
-    // 금융계좌 연결 시 1개월치의 거래내역 조회 후 현재 잔액 및 최근 거래내역 반환
-    @Operation(summary = "금융 계좌 연결 후 1개월 거래내역 저장 및 최신 거래내역 반환")
-    @PostMapping("/fetch/{memberId}")
-    public ResponseEntity<Map<String, Object>> fetchAndSaveTransactions(
-            @PathVariable Long memberId) {
-        // AccountInfo 데이터 조회
-        AccountInfoDto.AccountInfoResponseDto accountInfo = accountInfoService.getAccountInfo(memberId);
+        AccountInfoDto.AccountInfoResponseDto accountInfo = accountInfoService.saveAccountInfo(memberId, connectedId, requestDto);
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         String today = sdf.format(new Date());
@@ -69,9 +61,10 @@ public class TransactionsController {
 
     // 최신 거래내역 업데이트 및 조회
     @Operation(summary = "최신 거래내역 업데이트")
-    @PostMapping("/update/{memberId}")
-    public ResponseEntity<Map<String, Object>> updateAndFetchRecentTransactions(
-            @PathVariable Long memberId) {
+    @PostMapping("/update")
+    public ResponseEntity<Map<String, Object>> updateAndFetchRecentTransactions() {
+        Long memberId = getCurrentMemberId();
+
         // AccountInfo 데이터 조회
         AccountInfoDto.AccountInfoResponseDto accountInfo = accountInfoService.getAccountInfo(memberId);
 
@@ -96,7 +89,9 @@ public class TransactionsController {
     // 6개월치 거래내역 저장 컨트롤러 메서드
     @Operation(summary = "6개월 거래내역 저장")
     @PostMapping("/save/six-months/{memberId}")
-    public ResponseEntity<String> saveSixMonthsTransactionData(@PathVariable Long memberId) {
+    public ResponseEntity<String> saveSixMonthsTransactionData() {
+        Long memberId = getCurrentMemberId();
+
         // AccountInfo 데이터 조회
         AccountInfoDto.AccountInfoResponseDto accountInfo = accountInfoService.getAccountInfo(memberId);
 

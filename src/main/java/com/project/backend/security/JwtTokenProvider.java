@@ -22,11 +22,12 @@ public class JwtTokenProvider {
 
     private final Set<String> blacklistedTokens = new HashSet<>();
 
-    public String generateToken(String userName) {
+    public String generateToken(String userName, Long memberId) {
         SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
 
         return Jwts.builder()
                 .subject(userName)
+                .claim("memberId", memberId)
                 .issuedAt(new Date())
                 .expiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(key)
@@ -60,5 +61,16 @@ public class JwtTokenProvider {
 
     public boolean isTokenBlacklisted(String token) {
         return blacklistedTokens.contains(token);
+    }
+
+    public Long getMemberIdFromToken(String token) {
+        SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+
+        return Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("memberId", Long.class);
     }
 }
