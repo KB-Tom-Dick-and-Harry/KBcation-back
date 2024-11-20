@@ -56,7 +56,6 @@ public class AuthServiceImpl implements AuthService {
         return LoginResponseDto.builder()
                 .memberId(member.getMemberId())
                 .token(token)
-                .type("Bearer")
                 .userName(member.getUserName())
                 .fullName(member.getFullName())
                 .gender(member.getGender())

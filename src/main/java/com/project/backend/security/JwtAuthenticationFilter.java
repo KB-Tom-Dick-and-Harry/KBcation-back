@@ -54,9 +54,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String headerAuth = request.getHeader("Authorization");
 
         if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer")) {
-            // Bearer 토큰이 두 번 포함된 경우 처리
-            String[] parts = headerAuth.split("\\s+");
-            return parts[parts.length - 1];  // 마지막 부분(실제 토큰)만 반환
+            // Remove all "Bearer" occurrences and trim
+            String token = headerAuth.replaceAll("Bearer\\s+", "").trim();
+            log.debug("Parsed token: {}", token);
+            return token;
         }
         return null;
     }

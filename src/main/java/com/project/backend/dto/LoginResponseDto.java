@@ -16,9 +16,6 @@ public class LoginResponseDto {
     @Schema(description = "JWT 토큰", example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")
     private String token;
 
-    @Schema(description = "토큰 타입", example = "Bearer")
-    private String type = "Bearer";
-
     @Schema(description = "사용자 아이디", example = "user123")
     private String userName;
 

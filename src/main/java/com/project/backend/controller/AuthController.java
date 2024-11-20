@@ -44,7 +44,7 @@ public class AuthController {
     @Operation(
             summary = "로그아웃",
             description = "사용자 로그아웃을 처리합니다.",
-            security = @SecurityRequirement(name = "BearerAuth") // Bearer 인증 추가
+            security = @SecurityRequirement(name = "BearerAuth")
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "로그아웃 성공"),
@@ -52,7 +52,9 @@ public class AuthController {
     })
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@RequestHeader("Authorization") String token) {
-        authService.logout(token);
+        // Bearer 접두사 제거
+        String tokenValue = token.startsWith("Bearer ") ? token.substring(7) : token;
+        authService.logout(tokenValue);
         return ResponseEntity.ok().build();
     }
 }
