@@ -19,8 +19,9 @@ public class GameController {
     private final GameService gameService;
 
     @Operation(summary = "게임 시작하기", description = "1단계 게임을 생성하고 정보를 반환합니다.")
-    @PostMapping("/start")
-    public ResponseEntity<GameDto.GameResponseDto> startGame(@RequestParam Long memberId) {
+    @PostMapping("/start/{memberId}")
+    public ResponseEntity<GameDto.GameResponseDto> startGame(@PathVariable Long memberId) {
+        System.out.println("memberId : " + memberId);
         GameDto.GameResponseDto gameResponse = gameService.startNewGame(memberId);
         return ResponseEntity.ok(gameResponse);
     }
