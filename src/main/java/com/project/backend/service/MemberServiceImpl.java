@@ -4,6 +4,9 @@ import com.project.backend.dto.MemberDto;
 import com.project.backend.model.Member;
 import com.project.backend.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,22 +19,25 @@ import java.util.stream.Collectors;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
+
 
     @Override
     @Transactional
     public Long createMember(MemberDto.MemberRequestDto requestDto) {
-        // 사용자 이름 중복 확인
         if (memberRepository.existsByUserName(requestDto.getUserName())) {
             throw new IllegalArgumentException("이미 존재하는 사용자 이름입니다.");
         }
 
-        // 연결된 ID 중복 확인
         if (requestDto.getConnectedId() != null &&
                 memberRepository.existsByConnectedId(requestDto.getConnectedId())) {
             throw new IllegalArgumentException("이미 존재하는 연결된 ID입니다.");
         }
 
-        // DTO -> Entity 변환 후 저장
+        // 비밀번호 암호화
+        String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
+        requestDto.setPassword(encodedPassword);
+
         Member member = memberRepository.save(requestDto.toEntity());
         return member.getMemberId();
     }
@@ -39,7 +45,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public List<MemberDto.MemberResponseDto> getAllMembers() {
         return memberRepository.findAll().stream()
-                .map(MemberDto.MemberResponseDto::fromEntity) // Entity -> DTO 변환
+                .map(MemberDto.MemberResponseDto::fromEntity)
                 .collect(Collectors.toList());
     }
 
@@ -96,5 +102,38 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.findByUserNameAndConnectedIdIsNull(userName)
                 .orElseThrow(() -> new IllegalArgumentException("해당 조건을 만족하는 사용자가 없습니다."));
         return MemberDto.MemberResponseDto.fromEntity(member);
+    }
+
+    @Override
+    public MemberDto.MemberResponseDto getCurrentMember() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserName = authentication.getName();
+
+        Member member = memberRepository.findByUserName(currentUserName)
+                .orElseThrow(() -> new IllegalStateException("현재 인증된 사용자를 찾을 수 없습니다."));
+
+        return MemberDto.MemberResponseDto.fromEntity(member);
+    }
+
+    @Override
+    @Transactional
+    public MemberDto.MemberResponseDto updateCurrentMember(MemberDto.MemberRequestDto requestDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserName = authentication.getName();
+
+        Member member = memberRepository.findByUserName(currentUserName)
+                .orElseThrow(() -> new IllegalStateException("현재 인증된 사용자를 찾을 수 없습니다."));
+
+        member.setFullName(requestDto.getFullName());
+        member.setGender(requestDto.getGender());
+        member.setBirth(requestDto.getBirth());
+
+        if (requestDto.getPassword() != null && !requestDto.getPassword().isEmpty()) {
+            member.setPassword(passwordEncoder.encode(requestDto.getPassword()));
+        }
+
+        Member updatedMember = memberRepository.save(member);
+
+        return MemberDto.MemberResponseDto.fromEntity(updatedMember);
     }
 }

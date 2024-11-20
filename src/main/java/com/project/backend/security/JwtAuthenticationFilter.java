@@ -60,4 +60,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         return null;
     }
+    private String getJwtFromRequest(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization"); // 헤더에서 Authorization 값 가져오기
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) { // Bearer 형식인지 확인
+            return bearerToken.substring(7); // "Bearer " 이후의 토큰 반환
+        }
+        return null; // 없거나 형식이 맞지 않으면 null 반환
+    }
 }
