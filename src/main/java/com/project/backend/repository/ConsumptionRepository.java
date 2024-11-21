@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ConsumptionRepository extends JpaRepository<Consumption, Integer> {
@@ -22,4 +23,11 @@ public interface ConsumptionRepository extends JpaRepository<Consumption, Intege
 
     // 특정 회원의 최신 소비 내역 3건 조회
     List<Consumption> findTop3ByMemberIdOrderByDateDesc(Long memberId);
+
+    // 특정 회원의 최신 currentBalance 조회
+    Optional<Consumption> findTopByMemberIdOrderByDateDesc(Long memberId);
+
+    // 특정 회원의 특정 기간 내 소비 내역 조회
+    List<Consumption> findByMemberIdAndDateBetween(Long memberId, Date startDate, Date endDate);
+
 }

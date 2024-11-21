@@ -30,13 +30,16 @@ public class ConsumptionDto {
         private Integer spendingAmount;
         private Date date;
 
+        private Integer currentBalance;
+
         @Builder
-        public ConsumptionRequestDto(Long memberId, String consumptionDetails, String category, Integer spendingAmount, Date date) {
+        public ConsumptionRequestDto(Long memberId, String consumptionDetails, String category, Integer spendingAmount, Date date, Integer currentBalance) {
             this.memberId = memberId;
             this.consumptionDetails = consumptionDetails;
             this.category = category;
             this.spendingAmount = spendingAmount;
             this.date = date;
+            this.currentBalance = currentBalance;
         }
 
 
@@ -47,6 +50,7 @@ public class ConsumptionDto {
                     .category(category)
                     .spendingAmount(spendingAmount)
                     .date(date)
+                    .currentBalance(currentBalance)
                     .build();
         }
 
@@ -62,14 +66,16 @@ public class ConsumptionDto {
         private String category;
         private Integer spendingAmount;
         private Date date;
+        private Integer currentBalance;
 
-    public ConsumptionResponseDto(Consumption consumption) {
+        public ConsumptionResponseDto(Consumption consumption) {
             this.consumptionId = consumption.getConsumptionId();
             this.memberId = consumption.getMemberId();
             this.consumptionDetails = consumption.getConsumptionDetails();
             this.category = consumption.getCategory();
             this.spendingAmount = consumption.getSpendingAmount();
             this.date = consumption.getDate();
+            this.currentBalance = consumption.getCurrentBalance();
     }
 
     }

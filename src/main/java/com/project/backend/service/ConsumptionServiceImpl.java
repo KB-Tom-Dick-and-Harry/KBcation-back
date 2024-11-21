@@ -111,6 +111,7 @@ public class ConsumptionServiceImpl implements ConsumptionService {
                                 .category("BANK_TRANSACTION")
                                 .spendingAmount(accountOut)
                                 .date(transactionDate)
+                                .currentBalance(currentBalance)
                                 .build();
                         consumptionRepository.save(dto.toEntity());
                     }
@@ -127,6 +128,12 @@ public class ConsumptionServiceImpl implements ConsumptionService {
         return consumptionRepository.findTop3ByMemberIdOrderByDateDesc(memberId).stream()
                 .map(ConsumptionDto.ConsumptionResponseDto::new)
                 .collect(Collectors.toList());
+    }
+
+    public Integer getLatestBalance(Long memberId) {
+        return consumptionRepository.findTopByMemberIdOrderByDateDesc(memberId)
+                .map(Consumption::getCurrentBalance)
+                .orElse(0);
     }
 }
 

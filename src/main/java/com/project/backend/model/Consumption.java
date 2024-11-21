@@ -28,6 +28,7 @@ public class Consumption {
     private String category;
     private  Integer spendingAmount;
     private Date date;
+    private Integer currentBalance;
 
     // 업데이트 메서드
     public void updateDetails(ConsumptionDto.ConsumptionRequestDto requestDto){
@@ -35,5 +36,6 @@ public class Consumption {
         this.category = requestDto.getCategory();
         this.spendingAmount = requestDto.getSpendingAmount();
         this.date = requestDto.getDate();
+        this.currentBalance = requestDto.getCurrentBalance();
     }
 }

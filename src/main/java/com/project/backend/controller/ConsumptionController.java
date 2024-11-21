@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Tag(name = "Consumption",description = "소비 내역 관리 API")
 @RestController
@@ -71,5 +72,11 @@ public class ConsumptionController {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @GetMapping("/latest-balance/{memberId}")
+    public ResponseEntity<Integer> getLatestBalance(@PathVariable Long memberId) {
+        Integer latestBalance = consumptionServiceImpl.getLatestBalance(memberId);
+        return ResponseEntity.ok(latestBalance);
     }
 }
