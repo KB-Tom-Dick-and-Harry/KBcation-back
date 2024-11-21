@@ -27,26 +27,16 @@ public class TransactionsController {
     private final AccountInfoServiceImpl accountInfoService;
 
     // CODEF Connected ID 생성 후 저장
-    @Operation(summary = "connected Id 생성 및 계좌 정보 저장")
+    @Operation(summary = "금융 계좌 연동")
     @PostMapping("/create/accountInfo/{memberId}")
-    public ResponseEntity<AccountInfoDto.AccountInfoResponseDto> connectAccount(
+    public ResponseEntity<Map<String, Object>> connectAccount(
             @PathVariable Long memberId,
             @RequestBody AccountInfoDto.AccountInfoRequestDto requestDto) {
         // connectedId 생성
         String connectedId = codefService.registerAccount(memberId, requestDto);
 
         // accountInfo 저장
-        AccountInfoDto.AccountInfoResponseDto responseDto = accountInfoService.saveAccountInfo(memberId, connectedId, requestDto);
-        return ResponseEntity.ok(responseDto);
-    }
-
-    // 금융계좌 연결 시 1개월치의 거래내역 조회 후 현재 잔액 및 최근 거래내역 반환
-    @Operation(summary = "금융 계좌 연결 후 1개월 거래내역 저장 및 최신 거래내역 반환")
-    @PostMapping("/fetch/{memberId}")
-    public ResponseEntity<Map<String, Object>> fetchAndSaveTransactions(
-            @PathVariable Long memberId) {
-        // AccountInfo 데이터 조회
-        AccountInfoDto.AccountInfoResponseDto accountInfo = accountInfoService.getAccountInfo(memberId);
+        AccountInfoDto.AccountInfoResponseDto accountInfo = accountInfoService.saveAccountInfo(memberId, connectedId, requestDto);
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         String today = sdf.format(new Date());
